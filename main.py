@@ -1,35 +1,23 @@
 from fastapi import FastAPI
 
-from dotenv import load_dotenv
-from google import genai
-from pinecone import Pinecone,ServerlessSpec
-
-import os
+from utils.pdf_reader import pdf_reader
+from utils.create_index import create_index
+from utils.gemini_client import get_gemini_client
 
 
-load_dotenv()
-
-api_key = os.getenv("GEMINI_API_KEY")
-
-client = genai.Client(api_key=api_key)
+#Gemini API client
+gemini_client = get_gemini_client()
 
 
-
-pinecone_api_key = os.getenv("PINECONE_API_KEY")
-
-pinecone_client = Pinecone(api_key=pinecone_api_key)
+#extract text from PDF
+full_text = pdf_reader("fruits.pdf")
 
 
-#For create pinecone index
-# pinecone_client.create_index(
-#     name="rag-assistant",
-#     dimension=3072,
-#     metric="cosine",
-#     spec=ServerlessSpec(
-#         cloud="aws",
-#         region="us-east-1"
-#     )
-# )
+# print(client.models.count_tokens(
+#     model="gemini-embedding-2",
+#     contents=full_text
+# ))
+
 
 
 app = FastAPI()
